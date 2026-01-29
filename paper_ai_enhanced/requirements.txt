@@ -1,0 +1,18 @@
+# Arxiv论文爬取和总结系统依赖
+
+# Arxiv API
+arxiv>=2.1.0
+
+# HTTP请求
+requests>=2.31.0
+
+# YAML配置文件解析
+PyYAML>=6.0.1
+
+# PDF处理
+PyPDF2>=3.0.0
+
+# Web框架
+fastapi>=0.115.0
+uvicorn>=0.32.0
+python-multipart>=0.0.9

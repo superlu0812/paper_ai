@@ -1,0 +1,106 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environment
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+.venv/
+
+# PyCharm
+.idea/
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# pipenv
+Pipfile.lock
+
+# poetry
+poetry.lock
+
+# pytest
+.pytest_cache/
+.coverage
+htmlcov/
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# pytype static type analyzer
+.pytype/
+
+# Cython debug symbols
+cython_debug/
+
+# 项目特定：数据目录（包含爬取的论文数据）
+data/
+*.json
+*.pdf
+# 注意：README.md 不应该被忽略，如果需要忽略其他 .md 文件，可以添加具体路径
+# 例如：data/**/*.md 或 markdown_papers/**/*.md
+
+# 日志文件
+*.log
+logs/
+
+# 配置文件（可能包含敏感信息，如 API key）
+# 如果 config.yaml 包含敏感信息，建议：
+# 1. 将 config.yaml 添加到 .gitignore
+# 2. 创建 config.yaml.example 作为模板
+# config.yaml
+
+# 临时文件
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# 操作系统文件
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# 备份文件
+*.bak
+*.backup

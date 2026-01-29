@@ -1,0 +1,169 @@
+# Arxiv论文爬取和总结配置文件
+
+# 路径配置
+paths:
+  # 所有数据（JSON、PDF、Markdown等）存放的根目录
+  data_root: "./data"
+  # 推送数据保存目录（所有推送数据），默认在 data_root/push/all 下
+  # push_all_dir: "./data/push/all"
+  # 推送失败数据保存目录，默认在 data_root/push/failed 下
+  # push_failed_dir: "./data/push/failed"
+
+# Arxiv配置
+arxiv:
+  categories:
+    - "cs.AI"      # 人工智能
+    - "cs.LG"      # 机器学习
+    - "cs.CV"      # 计算机视觉
+    - "cs.CL"      # 计算语言学
+    - "cs.CR"      # 密码学和安全
+    - "cs.NE"      # 神经网络
+  max_results: 20  # 每次爬取的最大论文数
+  days_back: 1     # 往前推多少天（默认1天，即昨天）
+
+# 论文过滤配置
+filter:
+  enabled: true    # 是否启用论文过滤
+  # 过滤方式：keyword（关键词过滤）、semantic（语义理解过滤）、both（两种方式都使用，关键词优先）
+  mode: "both"     # 可选值: keyword, semantic, both
+  
+  # 关键词过滤配置
+  keyword:
+    enabled: true  # 是否启用关键词过滤
+    # 网络安全相关关键词列表
+    keywords:
+      - "漏洞挖掘"
+      - "漏洞检测"
+      - "vulnerability"
+      - "exploit"
+      - "恶意代码分析"
+      - "malware"
+      - "恶意流量检测"
+      - "malicious traffic"
+      - "软件供应链"
+      - "supply chain"
+      - "模糊测试"
+      - "fuzzing"
+      - "静态程序分析"
+      - "static analysis"
+      - "网络安全"
+      - "cybersecurity"
+      - "安全分析"
+      - "security analysis"
+      - "威胁检测"
+      - "threat detection"
+      - "入侵检测"
+      - "intrusion detection"
+    # 匹配模式：any（匹配任意关键词）或 all（匹配所有关键词）
+    match_mode: "any"
+    # 是否区分大小写
+    case_sensitive: false
+  
+  # 语义理解过滤配置（使用小模型）
+  semantic:
+    enabled: true  # 是否启用语义理解过滤
+    api_url: "https://open.bigmodel.cn/api/coding/paas/v4/chat/completions"  # 小模型API地址
+    api_key: "xxx.xxx"  # API密钥
+    model: "glm-4.5-flash"  # 小模型名称（用于快速过滤）
+    timeout: 30     # 请求超时时间（秒）- 过滤应该快速完成
+    max_retries: 3  # 失败重试次数
+    retry_delay: 2  # 重试间隔（秒）
+    
+    # 语义过滤提示词模板
+    prompt_template: |
+      请判断以下论文是否与网络安全相关。网络安全相关主题包括但不限于：
+      - 漏洞挖掘和检测
+      - 恶意代码分析
+      - 恶意流量检测
+      - 软件供应链安全
+      - 模糊测试
+      - 静态程序分析
+      - 威胁检测
+      - 入侵检测
+      - 其他网络安全相关研究
+      
+      论文标题：{title}
+      摘要：{summary}
+      
+      请直接回答"是"或"否"，不要有任何解释或推理过程，只输出答案。
+
+# 大模型配置（用于论文总结）
+llm:
+  enabled: true    # 是否启用大模型总结
+  api_url: "https://open.bigmodel.cn/api/coding/paas/v4/chat/completions"  # 大模型API地址
+  api_key: "xxxx.xxx"  # API密钥（如果需要）
+  model: "glm-4.5"  # 大模型名称（用于详细总结分析）
+  timeout: 300     # 请求超时时间（秒）- 论文总结可能需要较长时间
+  max_retries: 3   # 失败重试次数
+  retry_delay: 5   # 重试间隔（秒）
+
+  # 论文总结提示词模板
+  prompt_template: |
+    您是一位专业的论文分析师。
+    您应避免冗长的回复，而是使用正确的术语提供简洁、详细、准确的答案。
+
+    请阅读以下论文信息，并生成一份结构化的总结，包括以下部分：
+    - **Motivation**: 研究动机和背景
+    - **Method**: 方法和技术路线
+    - **Result**: 主要实验结果
+    - **Conclusion**: 结论和贡献
+
+    论文标题：{title}
+    作者：{authors}
+    
+    以下是论文的PDF文字内容（如果可用）或摘要：
+    {summary}
+
+    请基于上述内容，以Markdown格式(不需要```markdown```标签,输出标题以###开头)和中文语言输出总结：
+
+# 网关推送配置
+gateway:
+  enabled: false   # 是否启用网关推送
+  url: "http://ip/xxx"  # 推送网关地址
+
+# 服务器配置
+server:
+  api_prefix: "ai_paper"  # API路径前缀，默认为 ai_paper
+
+# AI Paper URL 配置
+aipaper_url:
+  enabled: true  # 是否启用 aipaper_url 字段
+  base_url: "http://ip:port/ai_paper/paper"  # AI Paper URL 基础路径
+
+# 输出配置
+output:
+  # JSON输出配置
+  json_enabled: true
+  json_path: "papers.json"  # 原始论文数据JSON文件路径（兼容字段，不再作为实际保存位置）
+
+  # Markdown输出配置
+  markdown_enabled: true
+  markdown_dir: "markdown_papers"  # 论文总结markdown文件保存目录（兼容字段，不再作为实际保存位置）
+
+  # 控制台输出
+  console_enabled: true
+
+# 爬取配置
+crawler:
+  request_delay: 1  # 请求间隔（秒）
+  timeout: 30       # 请求超时时间（秒）
+
+# 推送内容配置
+push_content:
+  # 推送消息格式
+  message_template: |
+    【Arxiv论文推荐】
+    论文标题：{title}
+    分类：{categories}
+    作者：{authors}
+    发布时间：{time}
+    链接：{url}
+    {summary}
+    ---
+    详细总结请查看：{markdown_file}
+
+  # 是否在推送中包含完整总结（如果总结较短）
+  include_full_summary: false
+
+  # 总结长度限制（字符数），超过则只推送摘要
+  summary_length_limit: 500
